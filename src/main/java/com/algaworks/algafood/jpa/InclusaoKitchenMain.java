@@ -1,7 +1,5 @@
 package com.algaworks.algafood.jpa;
 
-import java.util.List;
-
 import com.algaworks.algafood.AlgafoodApiApplication;
 import com.algaworks.algafood.domain.model.Kitchen;
 import com.algaworks.algafood.domain.repository.KitchenRepository;
