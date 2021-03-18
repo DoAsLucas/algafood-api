@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.algaworks.algafood.AlgafoodApiApplication;
 import com.algaworks.algafood.domain.model.Kitchen;
+import com.algaworks.algafood.domain.repository.KitchenRepository;
 
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -15,18 +16,18 @@ public class InclusaoKitchenMain {
 			.web(WebApplicationType.NONE)
 			.run(args);
 
-			CadastroKitchen cadastroKitchen = applicationContext.getBean(CadastroKitchen.class);
+			KitchenRepository kitchenRepository = applicationContext.getBean(KitchenRepository.class);
 
-			Kitchen cozinha1 = new Kitchen();
-			cozinha1.setName("Brasileira");
+			Kitchen kitchen1 = new Kitchen();
+			kitchen1.setName("Brasileira");
 
-			Kitchen cozinha2 = new Kitchen();
-			cozinha2.setName("Japonesa");
+			Kitchen kitchen2 = new Kitchen();
+			kitchen2.setName("Japonesa");
 
-			cozinha1 = cadastroKitchen.adicionar(cozinha1);
-			cozinha2 = cadastroKitchen.adicionar(cozinha2);
+			kitchen1 = kitchenRepository.salvar(kitchen1);
+			kitchen2 = kitchenRepository.salvar(kitchen2);
 
-			System.out.printf("%d - %s\n", cozinha1.getId(), cozinha1.getName());
-			System.out.printf("%d - %s\n", cozinha2.getId(), cozinha2.getName());
+			System.out.printf("%d - %s\n", kitchen1.getId(), kitchen1.getName());
+			System.out.printf("%d - %s\n", kitchen2.getId(), kitchen2.getName());
 		}
 }
