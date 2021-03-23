@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 @Component
-public class RestaurantRepositoryImpl implements RestaurantRepository{
+public class RestaurantRepositoryImpl implements RestaurantRepository {
 
 	@PersistenceContext
 	private EntityManager manager;
