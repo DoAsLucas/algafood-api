@@ -5,8 +5,8 @@ import java.util.List;
 import com.algaworks.algafood.domain.model.Kitchen;
 
 public interface KitchenRepository {
-	List<Kitchen> listar();
-	Kitchen buscar(Long id);
+	List<Kitchen> list();
+	Kitchen get(Long id);
 	Kitchen salvar(Kitchen kitchen);
 	void remover(Kitchen kitchen);
 }

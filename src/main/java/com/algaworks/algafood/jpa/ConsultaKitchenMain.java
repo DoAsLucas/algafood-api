@@ -17,7 +17,7 @@ public class ConsultaKitchenMain {
 			.run(args);
 
 			KitchenRepository kitchenRepository = applicationContext.getBean(KitchenRepository.class);
-			List<Kitchen> kitchenList = kitchenRepository.listar();
+			List<Kitchen> kitchenList = kitchenRepository.list();
 
 			for (Kitchen kitchen : kitchenList) {
 				System.out.println(kitchen.getName());

@@ -18,13 +18,13 @@ public class KitchenRepositoryImpl implements KitchenRepository{
 	private EntityManager manager;
 	
 	@Override
-	public List<Kitchen> listar() {
+	public List<Kitchen> list() {
 		return manager.createQuery("from Kitchen", Kitchen.class)
 				.getResultList();
 	}
 	
 	@Override
-	public Kitchen buscar(Long id) {
+	public Kitchen get(Long id) {
 		return manager.find(Kitchen.class, id);
 	}
 	
@@ -37,7 +37,7 @@ public class KitchenRepositoryImpl implements KitchenRepository{
 	@Transactional
 	@Override
 	public void remover(Kitchen kitchen) {
-		kitchen = buscar(kitchen.getId());
+		kitchen = get(kitchen.getId());
 		manager.remove(kitchen);
 	}
 }
