@@ -30,13 +30,13 @@ public class KitchenRepositoryImpl implements KitchenRepository{
 	
 	@Transactional
 	@Override
-	public Kitchen salvar(Kitchen kitchen) {
+	public Kitchen save(Kitchen kitchen) {
 		return manager.merge(kitchen);
 	}
 	
 	@Transactional
 	@Override
-	public void remover(Kitchen kitchen) {
+	public void remove(Kitchen kitchen) {
 		kitchen = get(kitchen.getId());
 		manager.remove(kitchen);
 	}

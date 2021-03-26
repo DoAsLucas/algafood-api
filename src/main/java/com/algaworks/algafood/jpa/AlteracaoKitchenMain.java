@@ -21,7 +21,7 @@ public class AlteracaoKitchenMain {
 		kitchen.setId(1L);
 		kitchen.setName("Brasileira");
 		
-		kitchenRepository.salvar(kitchen);
+		kitchenRepository.save(kitchen);
 		
 	}
 }

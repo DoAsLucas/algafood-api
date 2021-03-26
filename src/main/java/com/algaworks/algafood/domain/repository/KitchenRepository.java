@@ -7,6 +7,6 @@ import com.algaworks.algafood.domain.model.Kitchen;
 public interface KitchenRepository {
 	List<Kitchen> list();
 	Kitchen get(Long id);
-	Kitchen salvar(Kitchen kitchen);
-	void remover(Kitchen kitchen);
+	Kitchen save(Kitchen kitchen);
+	void remove(Kitchen kitchen);
 }

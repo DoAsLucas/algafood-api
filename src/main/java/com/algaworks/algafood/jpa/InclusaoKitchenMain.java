@@ -22,8 +22,8 @@ public class InclusaoKitchenMain {
 			Kitchen kitchen2 = new Kitchen();
 			kitchen2.setName("Japonesa");
 
-			kitchen1 = kitchenRepository.salvar(kitchen1);
-			kitchen2 = kitchenRepository.salvar(kitchen2);
+			kitchen1 = kitchenRepository.save(kitchen1);
+			kitchen2 = kitchenRepository.save(kitchen2);
 
 			System.out.printf("%d - %s\n", kitchen1.getId(), kitchen1.getName());
 			System.out.printf("%d - %s\n", kitchen2.getId(), kitchen2.getName());

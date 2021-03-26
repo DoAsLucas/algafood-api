@@ -19,6 +19,6 @@ public class ExclusaoKitchenMain {
 		Kitchen kitchen = new Kitchen();
 		kitchen.setId(1L);
 		
-		kitchenRepository.remover(kitchen);
+		kitchenRepository.remove(kitchen);
 	}
 }
