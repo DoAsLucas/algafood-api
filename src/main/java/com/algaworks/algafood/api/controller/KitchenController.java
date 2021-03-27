@@ -61,9 +61,8 @@ public class KitchenController {
 		if (currentKitchen == null) {
 			return ResponseEntity.notFound().build();
 		}
-		// currentKitchen.setName(kitchen.getName()Long);
 		BeanUtils.copyProperties(kitchen, currentKitchen, "id");
-		kitchenRepository.save(currentKitchen);
+		kitchenService.save(currentKitchen);
 
 		return ResponseEntity.ok(currentKitchen);
 	}
