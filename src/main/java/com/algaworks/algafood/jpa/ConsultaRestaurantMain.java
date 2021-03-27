@@ -17,7 +17,7 @@ public class ConsultaRestaurantMain {
 			.run(args);
 
 			RestaurantRepository kitchenRepository = applicationContext.getBean(RestaurantRepository.class);
-			List<Restaurant> restaurantList = kitchenRepository.listar();
+			List<Restaurant> restaurantList = kitchenRepository.list();
 
 			for (Restaurant restaurant : restaurantList) {
 				System.out.printf("Restaurante %s \nTaxa %s \n%s \n ---------- \n",
