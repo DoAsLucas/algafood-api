@@ -5,8 +5,8 @@ import java.util.List;
 import com.algaworks.algafood.domain.model.State;
 
 public interface StateRepository {
-	List<State> listar();
-	State buscar(Long id);
-	State salvar(State state);
-	void remover(State state);
+	List<State> list();
+	State get(Long id);
+	State save(State state);
+	void remove(Long id);
 }

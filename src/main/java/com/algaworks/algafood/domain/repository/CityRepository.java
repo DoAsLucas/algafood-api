@@ -5,8 +5,8 @@ import java.util.List;
 import com.algaworks.algafood.domain.model.City;
 
 public interface CityRepository {
-	List<City> listar();
-	City buscar(Long id);
-	City salvar(City city);
-	void remover(City city);
+	List<City> list();
+	City get(Long id);
+	City save(City city);
+	void remove(Long id);
 }
