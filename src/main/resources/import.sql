@@ -1,10 +1,12 @@
 insert into kitchen (id, name) values (1,'Tailandesa');
 insert into kitchen (id, name) values (2,'Indiana');
+insert into kitchen (id, name) values (3,'Australiana');
 
 
 insert into restaurant (name, taxa_frete, kitchen_id) values ('Lanchonete Jóia', 7.90, 1);
 insert into restaurant (name, taxa_frete, kitchen_id) values ('César Lanches', 9.00, 1);
 insert into restaurant (name, taxa_frete, kitchen_id) values ('Yaki Hashi', 5.30, 2);
+insert into restaurant (name, taxa_frete, kitchen_id) values ('Outback', 11.90, 3);
 
 insert into payment_method (description) values ("Débito");
 insert into payment_method (description) values ("Crédito");
