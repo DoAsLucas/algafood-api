@@ -9,10 +9,10 @@ import com.algaworks.algafood.domain.model.Kitchen;
 import com.algaworks.algafood.domain.repository.KitchenRepository;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Repository
 public class KitchenRepositoryImpl implements KitchenRepository{
 
 	@PersistenceContext
