@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.algaworks.algafood.domain.exception.EntityInUseException;
 import com.algaworks.algafood.domain.exception.EntityNotFoundException;
@@ -35,15 +36,15 @@ public class KitchenController {
 
 	@GetMapping
 	public List<Kitchen> list() {
-		return kitchenRepository.list();
+		return kitchenRepository.findAll();
 	}
 
 	@GetMapping("/{kitchenId}")
 	public ResponseEntity<Kitchen> get(@PathVariable Long kitchenId) {
-		Kitchen kitchen = kitchenRepository.get(kitchenId);
+		Optional<Kitchen> kitchen = kitchenRepository.findById(kitchenId);
 
-		if (kitchen != null) {
-			return ResponseEntity.ok(kitchen);
+		if (kitchen.isPresent()) {
+			return ResponseEntity.ok(kitchen.get());
 		}
 		return ResponseEntity.notFound().build();
 	}
@@ -56,15 +57,15 @@ public class KitchenController {
 
 	@PutMapping("/{kitchenId}")
 	public ResponseEntity<Kitchen> update(@PathVariable Long kitchenId, @RequestBody Kitchen kitchen) {
-		Kitchen currentKitchen = kitchenRepository.get(kitchenId);
+		Optional<Kitchen> currentKitchen = kitchenRepository.findById(kitchenId);
 
-		if (currentKitchen == null) {
+		if (!currentKitchen.isPresent()) {
 			return ResponseEntity.notFound().build();
 		}
-		BeanUtils.copyProperties(kitchen, currentKitchen, "id");
-		kitchenService.save(currentKitchen);
+		BeanUtils.copyProperties(kitchen, currentKitchen.get(), "id");
+		Kitchen createdKitchen = kitchenService.save(currentKitchen.get());
 
-		return ResponseEntity.ok(currentKitchen);
+		return ResponseEntity.ok(createdKitchen);
 	}
 
 	@DeleteMapping("/{kitchenId}")

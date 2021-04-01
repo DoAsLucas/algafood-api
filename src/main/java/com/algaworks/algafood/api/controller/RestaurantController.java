@@ -3,6 +3,7 @@ package com.algaworks.algafood.api.controller;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.algaworks.algafood.domain.exception.EntityInUseException;
 import com.algaworks.algafood.domain.exception.EntityNotFoundException;
@@ -13,7 +14,6 @@ import com.algaworks.algafood.domain.repository.RestaurantRepository;
 import com.algaworks.algafood.domain.service.RestaurantService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -45,15 +45,15 @@ public class RestaurantController {
 
 	@GetMapping
 	public List<Restaurant> list() {
-		return restaurantRepository.list();
+		return restaurantRepository.findAll();
 	}
 	
 	@GetMapping("/{restaurantId}")
 	public ResponseEntity<Restaurant> get(@PathVariable Long restaurantId) {
-		Restaurant restaurant =  restaurantRepository.get(restaurantId);
+		Optional<Restaurant> restaurant =  restaurantRepository.findById(restaurantId);
 
-		if (restaurant != null) {
-			return ResponseEntity.ok(restaurant);
+		if (restaurant.isPresent()) {
+			return ResponseEntity.ok(restaurant.get());
 		}
 
 		return ResponseEntity.notFound().build();
@@ -75,23 +75,21 @@ public class RestaurantController {
 	@PutMapping("/{restaurantId}")
 	public ResponseEntity<?> update(@PathVariable Long restaurantId, @RequestBody Restaurant restaurant) {
 		try {
-			Restaurant currentRestaurant = restaurantRepository.get(restaurantId);
-			if (currentRestaurant == null) {
+			Optional<Restaurant> currentRestaurant = restaurantRepository.findById(restaurantId);
+			if (currentRestaurant.isEmpty()) {
 				return ResponseEntity.notFound().build();
 			}
 
-			Kitchen kitchen = kitchenRepository.get(restaurant.getKitchen().getId());
+			Kitchen kitchen = kitchenRepository.getOne(restaurant.getKitchen().getId());
 			if (kitchen == null) {
 				throw new EntityNotFoundException(String.format(
 						"Kitchen ID %d not found.", restaurant.getKitchen().getId()));
 			}
 
-			BeanUtils.copyProperties(restaurant, currentRestaurant, "id");
-			restaurantRepository.save(currentRestaurant);
+			BeanUtils.copyProperties(restaurant, currentRestaurant.get(), "id");
+			Restaurant createdRestaurant = restaurantRepository.save(currentRestaurant.get());
 
-			currentRestaurant.setKitchen(kitchen);
-
-			return ResponseEntity.ok(currentRestaurant);
+			return ResponseEntity.ok(createdRestaurant);
 		} catch (EntityNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
@@ -113,16 +111,15 @@ public class RestaurantController {
 
 	@PatchMapping("/{restaurantId}")
 	public ResponseEntity<?> partialUpdate(@PathVariable Long restaurantId, @RequestBody Map<String, Object> fields) {
-		Restaurant currentRestaurant = restaurantRepository.get(restaurantId);
+		Optional<Restaurant> currentRestaurant = restaurantRepository.findById(restaurantId);
 
-		if (currentRestaurant == null) {
+		if (currentRestaurant.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
 
-		merge(fields, currentRestaurant);
+		merge(fields, currentRestaurant.get());
 
-		// return update(restaurantId, currentRestaurant);
-		return ResponseEntity.ok().build();
+		return update(restaurantId, currentRestaurant.get());
 	}
 
 	private void merge(Map<String, Object> sourceFields, Restaurant targetRestaurant) {

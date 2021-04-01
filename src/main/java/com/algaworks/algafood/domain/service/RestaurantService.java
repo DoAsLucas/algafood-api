@@ -1,7 +1,6 @@
 package com.algaworks.algafood.domain.service;
 
 import com.algaworks.algafood.domain.exception.EntityNotFoundException;
-import com.algaworks.algafood.domain.model.Kitchen;
 import com.algaworks.algafood.domain.model.Restaurant;
 import com.algaworks.algafood.domain.repository.KitchenRepository;
 import com.algaworks.algafood.domain.repository.RestaurantRepository;
@@ -21,19 +20,17 @@ public class RestaurantService {
 
 	public Restaurant save(Restaurant restaurant) {
 		Long kitchenId = restaurant.getKitchen().getId();
-		Kitchen kitchen = kitchenRepository.get(kitchenId);
+		kitchenRepository.findById(kitchenId)
+			.orElseThrow(() -> new EntityNotFoundException(
+				String.format("Kitchen ID %d not found.", kitchenId)));
 
-		if (kitchen == null) {
-			throw new EntityNotFoundException(
-				String.format("Kitchen ID %d not found.", kitchenId));
-		}
-		restaurant.setKitchen(kitchen);
-		return restaurantRepository.save(restaurant);
+		Restaurant createdRestaurant = restaurantRepository.save(restaurant);
+		return createdRestaurant;
 	}
 
 	public void remove(Long restaurantId) {
 		try {
-			restaurantRepository.remove(restaurantId);
+			restaurantRepository.deleteById(restaurantId);
 
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntityNotFoundException(

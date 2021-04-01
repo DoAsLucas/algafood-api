@@ -1,6 +1,7 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.algaworks.algafood.domain.exception.EntityInUseException;
 import com.algaworks.algafood.domain.exception.EntityNotFoundException;
@@ -34,7 +35,7 @@ public class StateController {
 
 	@GetMapping
 	public List<State> listar(){
-		return stateRepository.list();
+		return stateRepository.findAll();
 	}
 
 	@PostMapping
@@ -45,15 +46,15 @@ public class StateController {
 
 	@PutMapping("/{stateId}")
 	public ResponseEntity<State> update(@PathVariable Long stateId, @RequestBody State state) {
-		State currentState = stateRepository.get(stateId);
+		Optional<State> currentState = stateRepository.findById(stateId);
 
-		if (currentState == null) {
+		if (currentState.isEmpty()) {
 			return ResponseEntity.notFound().build();
 		}
-		BeanUtils.copyProperties(state, currentState, "id");
-		stateService.save(currentState);
+		BeanUtils.copyProperties(state, currentState.get(), "id");
+		State createdState = stateService.save(currentState.get());
 
-		return ResponseEntity.ok(currentState);
+		return ResponseEntity.ok(createdState);
 	}
 
 	@DeleteMapping("/{stateId}")

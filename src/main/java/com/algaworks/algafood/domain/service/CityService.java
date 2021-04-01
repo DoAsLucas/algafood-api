@@ -4,6 +4,7 @@ import com.algaworks.algafood.domain.exception.EntityInUseException;
 import com.algaworks.algafood.domain.exception.EntityNotFoundException;
 import com.algaworks.algafood.domain.model.City;
 import com.algaworks.algafood.domain.repository.CityRepository;
+import com.algaworks.algafood.domain.repository.StateRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -16,13 +17,22 @@ public class CityService {
 	@Autowired
 	CityRepository cityRepository;
 
+	@Autowired
+	StateRepository stateRepository;
+
 	public City save(City city) {
-		return cityRepository.save(city);
+		Long stateId = city.getState().getId();
+		stateRepository.findById(stateId)
+			.orElseThrow(() -> new EntityNotFoundException(
+				String.format("State ID %d not found.", stateId)));
+
+		City createdCity = cityRepository.save(city);
+		return createdCity;
 	}
 
 	public void delete(Long cityId) {
 		try {
-			cityRepository.remove(cityId);
+			cityRepository.deleteById(cityId);
 
 		} catch (EmptyResultDataAccessException e) {
 			throw new EntityNotFoundException(

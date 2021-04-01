@@ -1,10 +1,10 @@
 package com.algaworks.algafood.api.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.algaworks.algafood.domain.exception.EntityNotFoundException;
 import com.algaworks.algafood.domain.model.City;
-import com.algaworks.algafood.domain.model.State;
 import com.algaworks.algafood.domain.repository.CityRepository;
 import com.algaworks.algafood.domain.repository.StateRepository;
 import com.algaworks.algafood.domain.service.CityService;
@@ -38,36 +38,39 @@ public class CityController {
 
 	@GetMapping
 	public List<City> listar(){
-		return cityRepository.list();
+		return cityRepository.findAll();
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public City save(@RequestBody City city) {
-		return cityService.save(city);
+	public ResponseEntity<?> save(@RequestBody City city) {
+		try {
+			City createdCity = cityService.save(city);
+			return ResponseEntity.ok().body(createdCity);
+
+		} catch (EntityNotFoundException e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}	
 	}
 
 	@PutMapping("/{cityId}")
 	public ResponseEntity<?> update(@PathVariable Long cityId, @RequestBody City city) {
 		try{
 
-			City currentCity = cityRepository.get(cityId);
+			Optional<City> currentCity = cityRepository.findById(cityId);
 	
-			if (currentCity == null) {
+			if (currentCity.isEmpty()) {
 				return ResponseEntity.notFound().build();
 			}
 	
-			State state = stateRepository.get(city.getState().getId());
-			if (state == null) {
-				throw new EntityNotFoundException(
-						String.format("State ID %d not found.", city.getState().getId()));
-			}
+			stateRepository.findById(city.getState().getId())
+				.orElseThrow(() -> new EntityNotFoundException(
+					String.format("State ID %d not found.", city.getState().getId())));
 	
-			BeanUtils.copyProperties(city, currentCity, "id");
-			cityService.save(currentCity);
-			currentCity.setState(state);
+			BeanUtils.copyProperties(city, currentCity.get(), "id");
+			City createdCity = cityService.save(currentCity.get());
 	
-			return ResponseEntity.ok(currentCity);
+			return ResponseEntity.ok(createdCity);
 		} catch (EntityNotFoundException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
